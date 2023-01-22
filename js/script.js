@@ -13,7 +13,7 @@
     })();
 
     let totalClicks = 0;
-    let totalCps = 0;
+    let totalCps = [];
     let intervalId = -1;
 
     async function wait(ms) {
@@ -25,15 +25,20 @@
     function initInterval() {
         if (intervalId !== -1) clearInterval(intervalId);
         intervalId = setInterval(function () {
-            cps.textContent = `CPS: ${totalCps}`;
-            totalCps = 0;
-        }, 1000);
+            totalCps = totalCps.filter(click => (Date.now() - click.timestamp) < 1000);
+            cps.textContent = `CPS: ${totalCps.length}`;
+        }, 40); // 25 times per second
+    }
+
+    function update() {
+        cps.textContent = `CPS: ${totalCps.length}`;
+        total.textContent = `Total clicks: ${totalClicks}`;
     }
 
     function addClick() {
         totalClicks++;
-        totalCps++;
-        total.textContent = `Total clicks: ${totalClicks}`;
+        totalCps.push({ timestamp: Date.now() });
+        update();
     }
 
     function clickTypeIsCorrect(button) {
@@ -69,9 +74,8 @@
 
     rightClickModeCheck.addEventListener("click", function () {
         totalClicks = 0;
-        totalCps = 0;
-        cps.textContent = `CPS: ${totalCps}`;
-        total.textContent = `Total clicks: ${totalClicks}`;
+        totalCps = [];
+        update();
         initInterval();
     });
 
@@ -93,7 +97,7 @@
 
     document.addEventListener("DOMContentLoaded", main);
 
-    document.addEventListener("contextmenu", function () {
+    document.addEventListener("contextmenu", function (event) {
         event.preventDefault();
         return false;
     });
