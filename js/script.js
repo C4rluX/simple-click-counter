@@ -25,7 +25,7 @@
     function initInterval() {
         if (intervalId !== -1) clearInterval(intervalId);
         intervalId = setInterval(function () {
-            totalCps = totalCps.filter(click => (Date.now() - click.timestamp) < 1000);
+            totalCps = totalCps.filter(function (click) { return (Date.now() - click.timestamp) < 1000; });
             cps.textContent = `CPS: ${totalCps.length}`;
         }, 40); // 25 times per second
     }
