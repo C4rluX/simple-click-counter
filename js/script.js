@@ -42,17 +42,11 @@
     }
 
     function clickTypeIsCorrect(button) {
-        if (button == 0) {
-            if (!rightClickModeCheck.checked) return true;
-        } else {
-            if (rightClickModeCheck.checked) return true;
-        }
-        return false;
+        return (button === 0 && !rightClickModeCheck.checked) || (button === 2 && rightClickModeCheck.checked);
     }
 
     function isInvalidClick(button) {
-        if (button !== 0 && button !== 2) return true;
-        return false;
+        return button !== 0 && button !== 2;
     }
 
     button.addEventListener("mousedown", function (event) {
